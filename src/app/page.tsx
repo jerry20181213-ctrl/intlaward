@@ -200,7 +200,7 @@ export default function HomePage() {
               免费使用，每月 5 次评估
             </h2>
             <p className="text-sm text-white/40 mb-8 max-w-sm mx-auto">
-              登录后即可使用，查看历史评估记录和优化建议。
+              无需注册，上传作品即可获得 AI 匹配推荐。
             </p>
             <Link
               href="/assess"

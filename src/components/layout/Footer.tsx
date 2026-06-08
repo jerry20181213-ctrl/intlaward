@@ -19,7 +19,6 @@ export function Footer() {
           <div className="flex items-center gap-6">
             <Link href="/assess" className="text-[11px] text-[var(--text-tertiary)] hover:text-[var(--text-primary)] transition-colors">评估</Link>
             <Link href="/partners" className="text-[11px] text-[var(--text-tertiary)] hover:text-[var(--text-primary)] transition-colors">合作</Link>
-            <Link href="/login" className="text-[11px] text-[var(--text-tertiary)] hover:text-[var(--text-primary)] transition-colors">登录</Link>
           </div>
 
           {/* Copyright */}

@@ -22,15 +22,7 @@ export default function ResultsPage() {
   useEffect(() => {
     async function loadResults() {
       try {
-        const token = localStorage.getItem('da_token')
-        if (!token) {
-          window.location.href = '/login'
-          return
-        }
-
-        const res = await fetch(`/api/assess?assessmentId=${params.id}`, {
-          headers: { 'Authorization': `Bearer ${token}` },
-        })
+        const res = await fetch(`/api/assess?assessmentId=${params.id}`)
         const data = await res.json()
 
         if (!res.ok) {

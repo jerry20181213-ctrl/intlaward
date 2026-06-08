@@ -1,10 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { getUserIdFromToken, checkQuota, incrementUsage } from '@/lib/auth/auth'
 import { getServiceSupabase } from '@/lib/supabase/client'
 import { matchProject } from '@/lib/matching/engine'
 import { ProjectAssessment } from '@/lib/types'
 
-// In-memory assessment cache (for matching results)
+// In-memory assessment cache
 const assessmentCache = new Map<string, any>()
 
 // Clean cache every hour
@@ -17,29 +16,10 @@ if (typeof globalThis !== 'undefined') {
   }, 3600000)
 }
 
+const DEV_USER_ID = 'dev-user'
+
 export async function POST(request: NextRequest) {
   try {
-    // Auth check
-    const authHeader = request.headers.get('Authorization')
-    const token = authHeader?.replace('Bearer ', '')
-    if (!token) {
-      return NextResponse.json({ message: '请先登录' }, { status: 401 })
-    }
-
-    const userId = await getUserIdFromToken(token)
-    if (!userId) {
-      return NextResponse.json({ message: '登录已过期，请重新登录' }, { status: 401 })
-    }
-
-    // Check quota
-    const quota = await checkQuota(userId)
-    if (!quota.withinQuota) {
-      return NextResponse.json({
-        message: `本月免费评估次数已用完（${quota.limit}次），下月重置`,
-      }, { status: 429 })
-    }
-
-    // Parse project data
     const body = await request.json()
     const project: ProjectAssessment = {
       name: body.name || '',
@@ -59,14 +39,14 @@ export async function POST(request: NextRequest) {
     // Run matching
     const results = await matchProject(project)
 
-    // Store assessment (in-memory for dev, Supabase for prod)
+    // Store assessment
     const svc = getServiceSupabase()
     const assessmentId = crypto.randomUUID()
 
     if (svc) {
       const { error: dbError } = await svc.from('assessments').insert({
         id: assessmentId,
-        user_id: userId,
+        user_id: DEV_USER_ID,
         project_name: project.name,
         project_type: project.type,
         industry: project.industry,
@@ -78,12 +58,7 @@ export async function POST(request: NextRequest) {
         results: results,
       })
       if (dbError) console.error('DB insert error:', dbError)
-    } else {
-      console.log('[Dev] Supabase not configured, assessment stored in memory only')
     }
-
-    // Increment usage
-    await incrementUsage(userId)
 
     // Cache for GET lookup
     assessmentCache.set(assessmentId, {
@@ -101,17 +76,6 @@ export async function POST(request: NextRequest) {
 
 export async function GET(request: NextRequest) {
   try {
-    const authHeader = request.headers.get('Authorization')
-    const token = authHeader?.replace('Bearer ', '')
-    if (!token) {
-      return NextResponse.json({ message: '请先登录' }, { status: 401 })
-    }
-
-    const userId = await getUserIdFromToken(token)
-    if (!userId) {
-      return NextResponse.json({ message: '登录已过期' }, { status: 401 })
-    }
-
     const { searchParams } = new URL(request.url)
     const assessmentId = searchParams.get('assessmentId')
 
@@ -133,7 +97,6 @@ export async function GET(request: NextRequest) {
           .from('assessments')
           .select('*')
           .eq('id', assessmentId)
-          .eq('user_id', userId)
           .single()
 
         if (data) {
@@ -148,16 +111,7 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ message: '评估记录不存在' }, { status: 404 })
     }
 
-    // List all assessments for user
-    const svc = getServiceSupabase()
-    const { data: assessments } = await svc
-      .from('assessments')
-      .select('id, project_name, created_at')
-      .eq('user_id', userId)
-      .order('created_at', { ascending: false })
-      .limit(20)
-
-    return NextResponse.json({ assessments: assessments || [] })
+    return NextResponse.json({ message: '缺少评估ID' }, { status: 400 })
   } catch (error) {
     console.error('Assess GET error:', error)
     return NextResponse.json({ message: '加载失败' }, { status: 500 })

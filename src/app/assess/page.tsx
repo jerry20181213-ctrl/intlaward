@@ -77,12 +77,6 @@ export default function AssessPage() {
       // Submit
       setLoading(true)
       try {
-        const token = localStorage.getItem('da_token')
-        if (!token) {
-          router.push('/login')
-          return
-        }
-
         const formData = {
           name: form.name,
           type: form.type,
@@ -96,20 +90,13 @@ export default function AssessPage() {
 
         const res = await fetch('/api/assess', {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`,
-          },
+          headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(formData),
         })
 
         const data = await res.json()
 
         if (!res.ok) {
-          if (res.status === 401) {
-            router.push('/login')
-            return
-          }
           setError(data.message || '评估失败，请重试')
           return
         }

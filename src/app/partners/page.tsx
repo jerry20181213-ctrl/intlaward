@@ -23,15 +23,11 @@ export default function PartnersPage() {
   }, [])
 
   const handleSubmit = async (partnerId: string) => {
-    const token = localStorage.getItem('da_token')
     if (!form.name || !form.contact) return
 
     await fetch('/api/partners', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`,
-      },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ partnerId, ...form }),
     })
 

@@ -1,24 +1,13 @@
 'use client'
 
 import Link from 'next/link'
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { Menu, X } from 'lucide-react'
 import { usePathname } from 'next/navigation'
 
 export function Header() {
   const [mobileOpen, setMobileOpen] = useState(false)
-  const [user, setUser] = useState<{ phone: string } | null>(null)
   const pathname = usePathname()
-
-  useEffect(() => {
-    const token = localStorage.getItem('da_token')
-    if (token) {
-      const storedUser = localStorage.getItem('da_user')
-      if (storedUser) {
-        try { setUser(JSON.parse(storedUser)) } catch {}
-      }
-    }
-  }, [pathname])
 
   const links = [
     { href: '/', label: '评估' },
@@ -57,18 +46,6 @@ export function Header() {
         </nav>
 
         <div className="hidden md:flex items-center gap-4">
-          {user ? (
-            <span className="text-[11px] text-[var(--text-secondary)]">
-              {user.phone.replace(/(\d{3})\d{4}(\d{4})/, '$1****$2')}
-            </span>
-          ) : (
-            <Link
-              href="/login"
-              className="text-[11px] font-medium tracking-wider uppercase text-[var(--text-tertiary)] hover:text-[var(--text-primary)] transition-colors"
-            >
-              登录
-            </Link>
-          )}
           <Link
             href="/assess"
             className="text-[11px] font-semibold tracking-wider uppercase bg-black text-white px-4 py-1.5 hover:bg-[#1a1a1a] transition-colors"
@@ -96,17 +73,6 @@ export function Header() {
               {link.label}
             </Link>
           ))}
-          <div className="pt-2 border-t border-[var(--border-light)]">
-            {user ? (
-              <span className="text-xs text-[var(--text-secondary)]">{user.phone}</span>
-            ) : (
-              <Link href="/login" onClick={() => setMobileOpen(false)}>
-                <span className="text-xs font-medium tracking-wider uppercase text-[var(--text-primary)]">
-                  登录
-                </span>
-              </Link>
-            )}
-          </div>
         </div>
       )}
     </header>
