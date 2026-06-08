@@ -1,22 +1,25 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Space_Grotesk, Noto_Sans_SC } from "next/font/google";
 import "./globals.css";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const spaceGrotesk = Space_Grotesk({
+  variable: "--font-sans",
   subsets: ["latin"],
+  display: "swap",
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const notoSansSC = Noto_Sans_SC({
+  variable: "--font-cn",
   subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  display: "swap",
 });
 
 export const metadata: Metadata = {
-  title: "设计奖项匹配引擎 | 找到最适合你的设计奖",
-  description: "上传作品，AI智能匹配最适合你的国际设计奖项。覆盖iF、Red Dot、G-Mark等30+全球设计大奖。",
+  title: "DesignMatch | AI 设计奖项匹配工具",
+  description: "免费 AI 工具，智能匹配 iF、Red Dot、G-Mark 等 30+ 国际设计奖项。上传作品，1 分钟获取精准推荐。",
 };
 
 export default function RootLayout({
@@ -25,8 +28,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="zh-CN" className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}>
-      <body className="min-h-full flex flex-col bg-slate-50 text-slate-900">
+    <html lang="zh-CN" className={`${spaceGrotesk.variable} ${notoSansSC.variable}`}>
+      <body className="min-h-full flex flex-col bg-white text-black font-sans antialiased">
         <Header />
         <main className="flex-1">{children}</main>
         <Footer />

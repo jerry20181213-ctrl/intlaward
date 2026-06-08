@@ -12,14 +12,14 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 const Button = forwardRef<HTMLButtonElement, ButtonProps>(
   ({ className, variant = 'primary', size = 'md', loading, children, disabled, ...props }, ref) => {
     const variants = {
-      primary: 'bg-black text-white hover:bg-[#1a1a1a] active:bg-[#333]',
-      secondary: 'bg-[var(--bg-tertiary)] text-[var(--text-primary)] hover:bg-[#e8e8e8] active:bg-[#d4d4d4]',
-      outline: 'border-2 border-black text-black hover:bg-black hover:text-white active:bg-[#1a1a1a]',
-      ghost: 'text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-tertiary)]',
+      primary: 'bg-black text-white hover:bg-[#1a1a1a]',
+      secondary: 'bg-[var(--bg-tertiary)] text-[var(--text-primary)] hover:bg-[#e5e5e5]',
+      outline: 'border border-[var(--border)] text-[var(--text-primary)] hover:border-black',
+      ghost: 'text-[var(--text-secondary)] hover:text-[var(--text-primary)]',
     }
     const sizes = {
       sm: 'px-3 py-1.5 text-[11px]',
-      md: 'px-4 py-2 text-xs',
+      md: 'px-4 py-2 text-[11px]',
       lg: 'px-6 py-3 text-sm',
     }
 
@@ -27,7 +27,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       <button
         ref={ref}
         className={cn(
-          'inline-flex items-center justify-center font-medium tracking-wider uppercase transition-colors focus-visible:outline-2 focus-visible:outline-black focus-visible:outline-offset-2 disabled:opacity-40 disabled:pointer-events-none',
+          'inline-flex items-center justify-center font-semibold tracking-wider uppercase transition-all disabled:opacity-40 disabled:pointer-events-none',
           variants[variant],
           sizes[size],
           className

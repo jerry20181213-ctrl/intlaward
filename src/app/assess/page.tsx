@@ -52,6 +52,7 @@ const STEPS = [
 export default function AssessPage() {
   const [currentStep, setCurrentStep] = useState(0)
   const [files, setFiles] = useState<File[]>([])
+  const [filesInfo, setFilesInfo] = useState<any[]>([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const [form, setForm] = useState({
@@ -128,6 +129,11 @@ export default function AssessPage() {
       if (!form.description) { setError('请输入设计说明'); return }
     }
 
+    if (currentStep === 2 && files.length < 3) {
+      setError('请至少上传 3 张作品照片')
+      return
+    }
+
     setCurrentStep(prev => Math.min(prev + 1, 2))
   }
 
@@ -164,6 +170,9 @@ export default function AssessPage() {
           <FileUpload
             files={files}
             onFilesChange={setFiles}
+            filesInfo={filesInfo}
+            onFilesInfoChange={setFilesInfo}
+            minFiles={3}
             maxFiles={5}
             maxSizeMB={5}
           />

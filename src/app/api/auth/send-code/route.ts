@@ -10,13 +10,6 @@ export async function POST(request: NextRequest) {
     }
 
     const result = await sendVerificationCode(phone)
-
-    // Dev mode: include code in response for debugging
-    const devMode = !process.env.NEXT_PUBLIC_SUPABASE_URL
-    if (devMode && result.code) {
-      return NextResponse.json({ ...result, devCode: result.code })
-    }
-
     return NextResponse.json(result)
   } catch (error) {
     console.error('Send code error:', error)

@@ -40,17 +40,17 @@ export function StepForm({
               <div className="flex items-center gap-3">
                 <div
                   className={cn(
-                    'w-7 h-7 flex items-center justify-center text-[11px] font-mono font-bold transition-colors',
+                    'w-7 h-7 flex items-center justify-center text-[10px] font-semibold transition-colors',
                     index <= currentStep
                       ? 'bg-black text-white'
-                      : 'bg-[var(--bg-tertiary)] text-[var(--text-tertiary)]'
+                      : 'border border-[var(--border)] text-[var(--text-tertiary)] bg-white'
                   )}
                 >
                   {index < currentStep ? '→' : index + 1}
                 </div>
                 <div className="hidden sm:block">
                   <p className={cn(
-                    'text-xs font-medium',
+                    'text-[11px] font-medium',
                     index <= currentStep ? 'text-[var(--text-primary)]' : 'text-[var(--text-tertiary)]'
                   )}>
                     {step.title}
@@ -69,8 +69,10 @@ export function StepForm({
       </div>
 
       {/* Step content */}
-      <div className="border border-[var(--border)] bg-white p-6 md:p-8">
-        {children}
+      <div className="border border-[var(--border)] bg-white">
+        <div className="p-6 md:p-8">
+          {children}
+        </div>
       </div>
 
       {/* Navigation */}
@@ -79,7 +81,7 @@ export function StepForm({
           onClick={onPrev}
           disabled={isFirst}
           className={cn(
-            'flex items-center gap-1 px-4 py-2 text-xs font-medium tracking-wider uppercase transition-colors',
+            'flex items-center gap-1 px-4 py-2 text-[11px] font-medium tracking-wider uppercase transition-colors',
             isFirst
               ? 'text-[var(--text-tertiary)] cursor-not-allowed'
               : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)]'
@@ -92,7 +94,7 @@ export function StepForm({
           onClick={onNext}
           disabled={loading}
           className={cn(
-            'flex items-center gap-1 px-6 py-2.5 text-xs font-semibold tracking-wider uppercase transition-colors',
+            'flex items-center gap-1 px-6 py-2.5 text-[11px] font-semibold tracking-wider uppercase transition-colors',
             loading
               ? 'bg-[var(--text-tertiary)] text-white cursor-wait'
               : 'bg-black text-white hover:bg-[#1a1a1a]'

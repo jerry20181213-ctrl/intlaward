@@ -52,3 +52,18 @@ CREATE POLICY "Users can read own assessments" ON assessments
 -- Indexes
 CREATE INDEX IF NOT EXISTS idx_assessments_user_id ON assessments(user_id);
 CREATE INDEX IF NOT EXISTS idx_assessments_created_at ON assessments(created_at DESC);
+
+
+-- 3. Leads table (PDF report downloads)
+CREATE TABLE IF NOT EXISTS leads (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  name TEXT NOT NULL,
+  phone TEXT NOT NULL,
+  project_name TEXT DEFAULT '',
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+ALTER TABLE leads ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Service role can do everything on leads" ON leads
+  FOR ALL USING (auth.role() = 'service_role');
