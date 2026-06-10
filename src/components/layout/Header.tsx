@@ -12,6 +12,8 @@ export function Header() {
   const links = [
     { href: '/', label: '评估' },
     { href: '/awards', label: '奖项' },
+    { href: '/blog', label: '指南' },
+    { href: '/faq', label: 'FAQ' },
     { href: '/partners', label: '合作' },
   ]
 

@@ -1,9 +1,9 @@
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { ArrowLeft, ArrowRight, ExternalLink } from 'lucide-react'
-import { awards, getAwardById } from '@/lib/data/awards'
+import { awards } from '@/lib/data/awards'
 import { Award } from '@/lib/types'
-import { formatCurrency, daysUntil } from '@/lib/utils'
+import { formatCurrency, daysUntil, cosineSimilarity } from '@/lib/utils'
 
 // ─── Static generation ───
 
@@ -191,6 +191,9 @@ export default async function AwardDetailPage({ params }: { params: Promise<{ sl
           </div>
         )}
 
+        {/* Similar awards */}
+        <SimilarAwards currentAward={award} />
+
         {/* CTA */}
         <div className="border border-[var(--border)] bg-[var(--bg-secondary)] p-6 text-center">
           <h2 className="font-bold text-sm mb-2">想知道你的作品是否适合 {award.nameCn}？</h2>
@@ -207,6 +210,49 @@ export default async function AwardDetailPage({ params }: { params: Promise<{ sl
         </div>
       </div>
     </>
+  )
+}
+
+/** Similar awards — find by judging criteria similarity + category overlap */
+function SimilarAwards({ currentAward }: { currentAward: Award }) {
+  const similar = awards
+    .filter(a => a.id !== currentAward.id)
+    .map(a => {
+      const criteriaSim = cosineSimilarity(currentAward.judgingCriteria, a.judgingCriteria)
+      const catOverlap = a.categories.filter(c => currentAward.categories.includes(c)).length
+      const maxCats = Math.max(currentAward.categories.length, a.categories.length)
+      const catScore = maxCats > 0 ? catOverlap / maxCats : 0
+      return { award: a, score: criteriaSim * 0.7 + catScore * 0.3 }
+    })
+    .sort((a, b) => b.score - a.score)
+    .slice(0, 3)
+
+  if (similar.length === 0) return null
+
+  return (
+    <div className="border border-[var(--border)] bg-white p-6 mb-6">
+      <h2 className="font-bold text-sm mb-4">相似奖项推荐</h2>
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+        {similar.map(({ award }) => (
+          <Link
+            key={award.id}
+            href={`/awards/${award.slug}`}
+            className="border border-[var(--border)] p-4 hover:bg-[var(--bg-secondary)] transition-colors group"
+          >
+            <div className="font-bold text-sm mb-1 group-hover:underline">{award.nameCn}</div>
+            <div className="text-[10px] text-[var(--text-tertiary)] mb-2">{award.name}</div>
+            <p className="text-[10px] text-[var(--text-secondary)] leading-relaxed line-clamp-2 mb-2">
+              {award.description}
+            </p>
+            <div className="flex items-center gap-2 text-[10px] text-[var(--text-tertiary)]">
+              <span>难度 {'★'.repeat(award.difficulty)}</span>
+              <span className="w-px h-2.5 bg-[var(--border)]" />
+              <span>获奖率 {award.winRate}%</span>
+            </div>
+          </Link>
+        ))}
+      </div>
+    </div>
   )
 }
 

@@ -96,6 +96,33 @@ export interface User {
   createdAt: string
 }
 
+export interface Article {
+  id: string
+  title: string
+  description: string
+  slug: string
+  content: ArticleSection[]
+  category: string
+  categoryLabel: string
+  tags: string[]
+  publishedAt: string
+  readingTime: number
+  relatedAwards?: string[]
+}
+
+export interface ArticleSection {
+  title?: string
+  paragraphs?: string[]
+  list?: string[]
+  afterList?: string[]
+}
+
+export interface FAQItem {
+  id: string
+  question: string
+  answer: string
+}
+
 export interface Partner {
   id: string
   name: string
