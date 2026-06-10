@@ -1,11 +1,12 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import Link from 'next/link'
 import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
 import { Textarea } from '@/components/ui/Textarea'
 import { Partner } from '@/lib/types'
-import { Building2, ChevronRight, Send, ArrowLeft } from 'lucide-react'
+import { Building2, ChevronRight, Send, ArrowLeft, ArrowRight } from 'lucide-react'
 
 export default function PartnersPage() {
   const [partners, setPartners] = useState<Partner[]>([])
@@ -56,6 +57,19 @@ export default function PartnersPage() {
       </div>
 
       {!selectedPartner ? (
+        <><div className="max-w-2xl mx-auto mb-8">
+          <Link
+            href="/services"
+            className="flex items-center justify-between border border-[var(--border)] bg-white p-4 hover:bg-[var(--bg-secondary)] transition-colors group"
+          >
+            <div>
+              <div className="font-bold text-sm mb-0.5 group-hover:underline">增值服务</div>
+              <p className="text-[10px] text-[var(--text-tertiary)]">查看代申报、翻译、材料优化等配套服务</p>
+            </div>
+            <ArrowRight className="h-4 w-4 text-[var(--text-tertiary)] group-hover:text-black transition-colors" />
+          </Link>
+        </div>
+
         <div className="max-w-2xl mx-auto space-y-px">
           {partners.length === 0 ? (
             <div className="border border-[var(--border)] p-12 text-center">
@@ -92,6 +106,7 @@ export default function PartnersPage() {
             ))
           )}
         </div>
+        </>
       ) : submitted ? (
         <div className="max-w-md mx-auto border border-[var(--border)] bg-white p-8 text-center">
           <div className="w-12 h-12 border border-[var(--border)] flex items-center justify-center mx-auto mb-4">

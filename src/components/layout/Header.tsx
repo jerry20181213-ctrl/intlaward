@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { useState } from 'react'
-import { Menu, X } from 'lucide-react'
+import { Heart, Menu, X } from 'lucide-react'
 import { usePathname } from 'next/navigation'
 
 export function Header() {
@@ -15,6 +15,7 @@ export function Header() {
     { href: '/compare', label: '对比' },
     { href: '/blog', label: '指南' },
     { href: '/case-studies', label: '案例' },
+    { href: '/services', label: '服务' },
     { href: '/faq', label: 'FAQ' },
     { href: '/partners', label: '合作' },
   ]
@@ -50,6 +51,13 @@ export function Header() {
         </nav>
 
         <div className="hidden md:flex items-center gap-4">
+          <Link
+            href="/saved"
+            className="text-[11px] text-[var(--text-tertiary)] hover:text-[var(--text-primary)] transition-colors"
+            aria-label="收藏的奖项"
+          >
+            <Heart className="h-4 w-4" />
+          </Link>
           <Link
             href="/assess"
             className="text-[11px] font-semibold tracking-wider uppercase bg-black text-white px-4 py-1.5 hover:bg-[#1a1a1a] transition-colors"

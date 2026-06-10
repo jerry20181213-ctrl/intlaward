@@ -7,7 +7,8 @@ import { AwardCard } from '@/components/results/AwardCard'
 import { ComparisonTable } from '@/components/results/ComparisonTable'
 import { DownloadReport } from '@/components/results/DownloadReport'
 import { MatchResult } from '@/lib/types'
-import { Share2, Table, LayoutGrid, AlertCircle, RotateCcw, Download } from 'lucide-react'
+import { Table, LayoutGrid, AlertCircle, RotateCcw, Download } from 'lucide-react'
+import { WeChatShare } from '@/components/ui/WeChatShare'
 
 export default function ResultsPage() {
   const params = useParams()
@@ -100,8 +101,7 @@ export default function ResultsPage() {
           <Button variant="outline" size="sm" onClick={() => {
             navigator.clipboard.writeText(window.location.href)
           }}>
-            <Share2 className="h-3.5 w-3.5 mr-1" />
-            分享
+            <WeChatShare url={typeof window !== 'undefined' ? window.location.href : ''} variant="default" />
           </Button>
           <Button size="sm" onClick={() => setShowDownload(true)}>
             <Download className="h-3.5 w-3.5 mr-1" />

@@ -2,6 +2,7 @@ import Link from 'next/link'
 import { ArrowRight } from 'lucide-react'
 import { articles } from '@/lib/data/articles'
 import { formatDate } from '@/lib/utils'
+import { GuideCTA } from '@/components/lead/GuideCTA'
 
 export const metadata = {
   title: '设计奖博客 | DesignMatch — 申报指南与行业资讯',
@@ -73,8 +74,15 @@ export default function BlogPage() {
         ))}
       </div>
 
+      {/* Guide download CTA */}
+      <GuideCTA
+        title="📥 下载完整《2026设计奖完全指南》"
+        guideId="2026-design-awards-guide"
+        description="含30+奖项费用对比、申报流程、材料准备建议和预算策略"
+      />
+
       {/* CTA */}
-      <div className="mt-14 text-center border border-[var(--border)] bg-[var(--bg-secondary)] p-8">
+      <div className="mt-6 text-center border border-[var(--border)] bg-[var(--bg-secondary)] p-8">
         <h2 className="font-bold text-sm mb-2">不确定哪个奖项适合你？</h2>
         <p className="text-xs text-[var(--text-tertiary)] mb-4">
           上传作品，AI 智能匹配最适合的奖项

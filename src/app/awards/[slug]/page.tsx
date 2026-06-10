@@ -1,6 +1,8 @@
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { ArrowLeft, ArrowRight, ExternalLink } from 'lucide-react'
+import { SaveButton } from '@/components/awards/SaveButton'
+import { WeChatShare } from '@/components/ui/WeChatShare'
 import { awards } from '@/lib/data/awards'
 import { Award } from '@/lib/types'
 import { formatCurrency, daysUntil, cosineSimilarity } from '@/lib/utils'
@@ -101,14 +103,18 @@ export default async function AwardDetailPage({ params }: { params: Promise<{ sl
             <div>
               <div className="flex items-center gap-3 mb-2">
                 <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">{award.nameCn}</h1>
-                <a
-                  href={award.website}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1 text-[11px] text-[var(--text-tertiary)] hover:text-[var(--text-primary)] transition-colors mt-1"
-                >
-                  官网 <ExternalLink className="h-3 w-3" />
-                </a>
+                <div className="flex items-center gap-2 mt-1">
+                  <a
+                    href={award.website}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1 text-[11px] text-[var(--text-tertiary)] hover:text-[var(--text-primary)] transition-colors"
+                  >
+                    官网 <ExternalLink className="h-3 w-3" />
+                  </a>
+                  <SaveButton slug={award.slug} />
+                  <WeChatShare variant="default" />
+                </div>
               </div>
               <p className="text-sm text-[var(--text-secondary)]">{award.name}</p>
             </div>
