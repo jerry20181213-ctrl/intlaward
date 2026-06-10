@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useCallback } from 'react'
+import Image from 'next/image'
 import { Share2, X, Copy, Check } from 'lucide-react'
 
 interface WeChatShareProps {
@@ -66,13 +67,16 @@ export function WeChatShare({ url, label, variant = 'default' }: WeChatShareProp
             {/* QR Code */}
             <div className="text-center mb-4">
               <div className="w-[180px] h-[180px] mx-auto border border-[var(--border)] bg-white flex items-center justify-center">
-                <img
+                <Image
                   src={qrSrc}
                   alt="微信扫码分享"
+                  width={160}
+                  height={160}
                   className="w-[160px] h-[160px]"
+                  unoptimized
                   onError={(e) => {
                     // Fallback if QR API fails
-                    (e.target as HTMLImageElement).style.display = 'none'
+                    (e.currentTarget).style.display = 'none'
                   }}
                 />
               </div>

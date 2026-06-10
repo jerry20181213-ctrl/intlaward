@@ -1,27 +1,19 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import Link from 'next/link'
 import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
 import { Textarea } from '@/components/ui/Textarea'
-import { Partner } from '@/lib/types'
+import { partners } from '@/lib/data/partners'
 import { Building2, ChevronRight, Send, ArrowLeft, ArrowRight } from 'lucide-react'
 
+type Partner = typeof partners[number]
+
 export default function PartnersPage() {
-  const [partners, setPartners] = useState<Partner[]>([])
-  const [loading, setLoading] = useState(true)
   const [selectedPartner, setSelectedPartner] = useState<Partner | null>(null)
   const [form, setForm] = useState({ name: '', contact: '', message: '' })
   const [submitted, setSubmitted] = useState(false)
-
-  useEffect(() => {
-    fetch('/api/partners')
-      .then(res => res.json())
-      .then(data => setPartners(data.partners || []))
-      .catch(console.error)
-      .finally(() => setLoading(false))
-  }, [])
 
   const handleSubmit = async (partnerId: string) => {
     if (!form.name || !form.contact) return
@@ -33,14 +25,6 @@ export default function PartnersPage() {
     })
 
     setSubmitted(true)
-  }
-
-  if (loading) {
-    return (
-      <div className="flex justify-center py-20">
-        <p className="text-sm text-[var(--text-tertiary)]">加载中...</p>
-      </div>
-    )
   }
 
   return (
@@ -71,13 +55,7 @@ export default function PartnersPage() {
         </div>
 
         <div className="max-w-2xl mx-auto space-y-px">
-          {partners.length === 0 ? (
-            <div className="border border-[var(--border)] p-12 text-center">
-              <Building2 className="h-8 w-8 text-[var(--text-tertiary)] mx-auto mb-3" />
-              <p className="text-sm text-[var(--text-tertiary)]">暂无合作机构</p>
-            </div>
-          ) : (
-            partners.map(partner => (
+          {partners.map(partner => (
               <div
                 key={partner.id}
                 className="border border-[var(--border)] bg-white p-5 hover:bg-[var(--bg-secondary)] transition-colors cursor-pointer"
@@ -103,8 +81,7 @@ export default function PartnersPage() {
                   ))}
                 </div>
               </div>
-            ))
-          )}
+            ))}
         </div>
         </>
       ) : submitted ? (

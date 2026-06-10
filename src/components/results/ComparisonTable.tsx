@@ -1,5 +1,3 @@
-'use client'
-
 import { MatchResult } from '@/lib/types'
 import { formatCurrency, daysUntil } from '@/lib/utils'
 
