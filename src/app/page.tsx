@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import { ArrowRight } from 'lucide-react'
+import { AssessmentCounter } from '@/components/ui/AssessmentCounter'
 
 const jsonLd = {
   '@context': 'https://schema.org',
@@ -92,6 +93,11 @@ export default function HomePage() {
                 <div className="text-2xl font-bold">5</div>
                 <div className="text-[10px] text-[var(--text-tertiary)] tracking-widest uppercase mt-1">免费次数/月</div>
               </div>
+            </div>
+
+            {/* Social proof */}
+            <div className="mt-6 flex justify-center">
+              <AssessmentCounter />
             </div>
           </div>
         </div>

@@ -55,6 +55,18 @@ export default function AwardsPage() {
         </p>
       </div>
 
+      {/* Deadline calendar link */}
+      <Link
+        href="/awards/deadlines"
+        className="flex items-center justify-between border border-[var(--border)] bg-white p-4 mb-8 hover:bg-[var(--bg-secondary)] transition-colors group"
+      >
+        <div>
+          <div className="font-bold text-sm mb-0.5 group-hover:underline">截止日期日历</div>
+          <p className="text-[10px] text-[var(--text-tertiary)]">按紧急程度查看所有奖项截止日期</p>
+        </div>
+        <ArrowRight className="h-4 w-4 text-[var(--text-tertiary)] group-hover:text-black transition-colors" />
+      </Link>
+
       {/* Awards grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-px bg-[var(--border-light)]">
         {awards.map((award) => (
@@ -94,8 +106,23 @@ export default function AwardsPage() {
         ))}
       </div>
 
+      {/* Compare CTA */}
+      <div className="mt-8 text-center border border-[var(--border)] bg-white p-6">
+        <h2 className="font-bold text-sm mb-1">想对比多个奖项？</h2>
+        <p className="text-xs text-[var(--text-tertiary)] mb-3">
+          并排查看费用、截止日期和评审标准
+        </p>
+        <Link
+          href="/compare"
+          className="inline-flex items-center gap-2 border border-black text-black font-semibold px-5 py-2 text-xs tracking-wide hover:bg-black hover:text-white transition-colors"
+        >
+          开始对比
+          <ArrowRight className="h-3 w-3" />
+        </Link>
+      </div>
+
       {/* CTA */}
-      <div className="mt-14 text-center border border-[var(--border)] bg-[var(--bg-secondary)] p-8">
+      <div className="mt-6 text-center border border-[var(--border)] bg-[var(--bg-secondary)] p-8">
         <h2 className="font-bold text-sm mb-2">不确定哪个奖项适合你？</h2>
         <p className="text-xs text-[var(--text-tertiary)] mb-4">
           上传你的作品，AI 智能匹配最适合的奖项

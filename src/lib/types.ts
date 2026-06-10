@@ -123,6 +123,22 @@ export interface FAQItem {
   answer: string
 }
 
+export interface CaseStudy {
+  id: string
+  title: string
+  slug: string
+  description: string
+  designer: string
+  role: string
+  location: string
+  content: string[]
+  awards: { awardSlug: string; label: string }[]
+  results: { label: string; value: string }[]
+  image?: string
+  tags: string[]
+  publishedAt: string
+}
+
 export interface Partner {
   id: string
   name: string
