@@ -7,6 +7,20 @@ export const metadata = {
   description: '浏览 iF、Red Dot、G-Mark 等 30+ 国际设计奖项，查看评审标准、费用、截止日期等详细信息。',
 }
 
+const listSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'ItemList',
+  name: '全部设计奖项',
+  description: '浏览 iF、Red Dot、G-Mark 等 30+ 国际设计奖项',
+  url: 'https://intlaward.com/awards',
+  itemListElement: awards.map((award, index) => ({
+    '@type': 'ListItem',
+    position: index + 1,
+    url: `https://intlaward.com/awards/${award.slug}`,
+    name: award.nameCn,
+  })),
+}
+
 export default function AwardsPage() {
   // Group awards by category
   const categories = [
@@ -21,6 +35,10 @@ export default function AwardsPage() {
 
   return (
     <div className="container-tight py-16">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(listSchema) }}
+      />
       {/* Header */}
       <div className="max-w-2xl mx-auto text-center mb-14">
         <div className="inline-flex items-center gap-2 border border-[var(--border)] px-3 py-1 mb-6">

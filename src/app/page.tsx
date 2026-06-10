@@ -1,9 +1,29 @@
 import Link from 'next/link'
 import { ArrowRight } from 'lucide-react'
 
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  name: 'DesignMatch',
+  url: 'https://intlaward.com',
+  description: '免费 AI 工具，智能匹配 iF、Red Dot、G-Mark 等 30+ 国际设计奖项。上传作品，1 分钟获取精准推荐。',
+  potentialAction: {
+    '@type': 'SearchAction',
+    target: {
+      '@type': 'EntryPoint',
+      urlTemplate: 'https://intlaward.com/awards?q={search_term_string}',
+    },
+    'query-input': 'required name=search_term_string',
+  },
+}
+
 export default function HomePage() {
   return (
     <div>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       {/* ─── Hero ─── */}
       <section className="relative min-h-[90vh] flex items-center overflow-hidden border-b border-[var(--border)]">
         {/* Background grid */}
