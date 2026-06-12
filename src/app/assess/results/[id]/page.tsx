@@ -6,8 +6,8 @@ import { Button } from '@/components/ui/Button'
 import { AwardCard } from '@/components/results/AwardCard'
 import { ComparisonTable } from '@/components/results/ComparisonTable'
 import { DownloadReport } from '@/components/results/DownloadReport'
-import { MatchResult } from '@/lib/types'
-import { Table, LayoutGrid, AlertCircle, RotateCcw, Download } from 'lucide-react'
+import { MatchResult, QualityGateResult, StrategySummary } from '@/lib/types'
+import { Table, LayoutGrid, AlertCircle, RotateCcw, Download, Lightbulb, AlertTriangle } from 'lucide-react'
 import { WeChatShare } from '@/components/ui/WeChatShare'
 
 export default function ResultsPage() {
@@ -19,6 +19,8 @@ export default function ResultsPage() {
   const [error, setError] = useState('')
   const [showTable, setShowTable] = useState(false)
   const [showDownload, setShowDownload] = useState(false)
+  const [qualityGate, setQualityGate] = useState<QualityGateResult | null>(null)
+  const [strategy, setStrategy] = useState<StrategySummary | null>(null)
 
   useEffect(() => {
     async function loadResults() {
@@ -33,6 +35,8 @@ export default function ResultsPage() {
 
         setResults(data.results || [])
         setProjectName(data.projectName || '')
+        setQualityGate(data.qualityGate || null)
+        setStrategy(data.strategy || null)
       } catch {
         setError('加载失败，请重新评估')
       } finally {
@@ -67,6 +71,13 @@ export default function ResultsPage() {
     )
   }
 
+  const tierIcons: Record<string, React.ReactNode> = {
+    'top-tier': '🏆',
+    combo: '🎯',
+    experience: '📈',
+    improve: '💡',
+  }
+
   return (
     <div className="container-tight py-12">
       {/* Header */}
@@ -79,6 +90,48 @@ export default function ResultsPage() {
           </p>
         )}
       </div>
+
+      {/* 质量警告：置信度偏低但仍在可接受范围 */}
+      {qualityGate && qualityGate.pass && qualityGate.confidence < 0.55 && (
+        <div className="mb-6 border border-yellow-300 bg-yellow-50 p-4 flex items-start gap-3">
+          <AlertTriangle className="h-4 w-4 text-yellow-600 flex-shrink-0 mt-0.5" />
+          <div>
+            <p className="text-sm font-medium text-yellow-800">匹配结果仅供参考</p>
+            <p className="text-xs text-yellow-700 mt-0.5">
+              您提供的描述信息较简略（置信度 {Math.round(qualityGate.confidence * 100)}%），
+              建议返回补充更多设计细节以获得更精准的推荐。
+            </p>
+          </div>
+        </div>
+      )}
+
+      {/* 策略总结 */}
+      {strategy && strategy.tier !== 'none' && (
+        <div className="mb-6 border border-[var(--border)] bg-white">
+          <div className="p-5">
+            <div className="flex items-center gap-2 mb-2">
+              <Lightbulb className="h-3.5 w-3.5 text-[var(--text-tertiary)]" />
+              <span className="text-[10px] font-medium tracking-[0.15em] uppercase text-[var(--text-tertiary)]">
+                推荐策略
+              </span>
+            </div>
+            <div className="flex items-start gap-3">
+              <span className="text-xl flex-shrink-0 mt-0.5">{tierIcons[strategy.tier] || '💡'}</span>
+              <div>
+                <h3 className="font-bold text-base mb-1">{strategy.tierLabel}</h3>
+                <p className="text-sm text-[var(--text-secondary)] leading-relaxed">
+                  {strategy.tierDescription}
+                </p>
+                {strategy.safeBetCount > 1 && (
+                  <p className="text-xs text-[var(--text-tertiary)] mt-2">
+                    {strategy.safeBetCount} 个奖项可作为稳妥选择
+                  </p>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Actions bar */}
       <div className="flex items-center justify-between mb-6">

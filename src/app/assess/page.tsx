@@ -55,6 +55,7 @@ export default function AssessPage() {
   const [filesInfo, setFilesInfo] = useState<any[]>([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
+  const [qualityIssues, setQualityIssues] = useState<string[]>([])
   const [form, setForm] = useState({
     name: '',
     type: '',
@@ -98,8 +99,14 @@ export default function AssessPage() {
 
         if (!res.ok) {
           setError(data.message || '评估失败，请重试')
+          if (data.qualityGate?.issues) {
+            setQualityIssues(data.qualityGate.issues)
+          }
           return
         }
+
+        // Clear any previous quality issues on success
+        setQualityIssues([])
 
         router.push(`/assess/results/${data.id}`)
       } catch {
@@ -138,8 +145,20 @@ export default function AssessPage() {
       </div>
 
       {error && (
-        <div className="max-w-2xl mx-auto mb-6 p-3 border border-[var(--border)] bg-[var(--bg-secondary)] text-sm text-[var(--text-secondary)]">
-          {error}
+        <div className="max-w-2xl mx-auto mb-6 border border-[var(--border)] bg-[var(--bg-secondary)]">
+          <div className="p-4">
+            <p className="text-sm font-medium text-[var(--text-primary)]">{error}</p>
+            {qualityIssues.length > 0 && (
+              <ul className="mt-2 space-y-1">
+                {qualityIssues.map((issue, i) => (
+                  <li key={i} className="text-xs text-[var(--text-secondary)] flex items-start gap-1.5">
+                    <span className="mt-0.5 w-1 h-1 rounded-full bg-[var(--text-tertiary)] flex-shrink-0" />
+                    {issue}
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
         </div>
       )}
 

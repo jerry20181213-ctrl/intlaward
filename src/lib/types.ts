@@ -71,8 +71,30 @@ export interface MatchResult {
   styleFit: number
   budgetFit: number
   deadlineFit: number
+  difficultyFit: number
   reason: string
   optimizationTip?: string
+}
+
+export interface QualityGateResult {
+  pass: boolean
+  confidence: number
+  issues: string[]
+  details: {
+    charCount: number
+    fillerRatio: number
+    hasDomain: boolean
+    designKeywords: number
+    specificity: number
+  }
+}
+
+export interface StrategySummary {
+  tier: 'top-tier' | 'combo' | 'experience' | 'improve' | 'none'
+  tierLabel: string
+  tierDescription: string
+  topAwardName: string
+  safeBetCount: number
 }
 
 export interface AssessmentRecord {

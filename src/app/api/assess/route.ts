@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getServiceSupabase } from '@/lib/supabase/client'
-import { matchProject } from '@/lib/matching/engine'
+import { assessProject } from '@/lib/matching/engine'
 import { ProjectAssessment } from '@/lib/types'
 
 // In-memory assessment cache
@@ -32,14 +32,26 @@ export async function POST(request: NextRequest) {
       imageCount: body.imageCount || 0,
     }
 
+    // 基础字段校验
     if (!project.name || !project.description) {
       return NextResponse.json({ message: '请填写必填字段' }, { status: 400 })
     }
 
-    // Run matching
-    const results = await matchProject(project)
+    // 执行完整评估流水线：质量门禁 → 匹配 → 策略
+    const { qualityGate, results, strategy } = await assessProject(project)
 
-    // Store assessment
+    // 质量门禁熔断：置信度过低，不返回匹配结果
+    if (!qualityGate.pass) {
+      return NextResponse.json(
+        {
+          message: '作品描述信息不足，无法进行有效评估',
+          qualityGate,
+        },
+        { status: 400 },
+      )
+    }
+
+    // 存储评估记录
     const svc = getServiceSupabase()
     const assessmentId = crypto.randomUUID()
 
@@ -60,14 +72,21 @@ export async function POST(request: NextRequest) {
       if (dbError) console.error('DB insert error:', dbError)
     }
 
-    // Cache for GET lookup
+    // 缓存（含策略和质量门禁信息）
     assessmentCache.set(assessmentId, {
       results,
       projectName: project.name,
+      qualityGate,
+      strategy,
       timestamp: Date.now(),
     })
 
-    return NextResponse.json({ id: assessmentId, results })
+    return NextResponse.json({
+      id: assessmentId,
+      results,
+      qualityGate,
+      strategy,
+    })
   } catch (error) {
     console.error('Assess error:', error)
     return NextResponse.json({ message: '评估失败，请重试' }, { status: 500 })
@@ -87,6 +106,8 @@ export async function GET(request: NextRequest) {
           id: assessmentId,
           results: cached.results,
           projectName: cached.projectName,
+          qualityGate: cached.qualityGate,
+          strategy: cached.strategy,
         })
       }
 
